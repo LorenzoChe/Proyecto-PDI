@@ -1,2 +1,8 @@
-mysql-connector-python
+pip install pyinstaller
+
+python -m venv venv311
+venv311\Scripts\activate
+
+pip install pymysql
+
 tk

@@ -1,6 +1,19 @@
+import sys, os
+import configparser
+
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.dirname(os.path.abspath(__file__))
+
+config_path = os.path.join(base_path, "config.ini")
+
+config = configparser.ConfigParser()
+config.read(config_path)
+
 import tkinter as tk
 from tkinter import ttk
-import mysql.connector
+import pymysql
 import configparser
 
 config = configparser.ConfigParser()
@@ -14,12 +27,21 @@ def conectar():
     password = entry_pass.get() or DB["password"]
     database = entry_db.get() or DB["database"]
 
-    return mysql.connector.connect(
+    try:
+        return pymysql.connect(
         host=host,
         user=user,
         password=password,
-        database=database
+        database=database,
+        charset="utf8mb4",
+        cursorclass=pymysql.cursors.Cursor
     )
+
+    except Exception as e:
+        from tkinter import messagebox
+        messagebox.showerror("Error de conexión", str(e))
+        raise
+
 
 def cargar_tablas():
     conn = conectar()
